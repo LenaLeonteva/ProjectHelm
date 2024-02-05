@@ -1,0 +1,97 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Values.postgres.name }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: {{ .Values.postgres.volume.storage }}
+  hostPath:
+    path: {{ .Values.postgres.volume.path }}
+  storageClassName: standard
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.postgres.name }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.postgres.volume.storage }}
+  volumeName: {{ .Values.postgres.name }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Values.postgres.name }}
+type: Opaque
+data:
+  POSTGRES_USER: {{ .Values.postgres.secret.user }} # printf postgres | base64
+  POSTGRES_PASSWORD: {{ .Values.postgres.secret.pass }} # printf password | base64
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.postgres.name }}
+  labels:
+    app: {{ .Values.postgres.name }}
+    role: service
+spec:
+  replicas: {{ .Values.postgres.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.postgres.name }}
+      role: service
+  serviceName: {{ .Values.postgres.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.postgres.name }}
+        role: service
+    spec:
+      containers:
+        - name: {{ .Values.postgres.name }}
+          image: {{ .Values.postgres.image.repository }}
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  key: POSTGRES_USER
+                  name: {{ .Values.postgres.name }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: POSTGRES_PASSWORD
+                  name: {{ .Values.postgres.name }}
+          ports:
+            - containerPort: {{ .Values.postgres.port }}
+              name: {{ .Values.postgres.name }}
+              protocol: TCP
+          volumeMounts:
+            - name: {{ .Values.postgres.name }}
+              mountPath: {{ .Values.postgres.mountPath }}
+      volumes:
+        - name: {{ .Values.postgres.name }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.postgres.name }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.postgres.name }}
+  labels:
+    app: {{ .Values.postgres.name }}
+    role: service
+spec:
+  selector:
+    app: {{ .Values.postgres.name }}
+    role: service
+  type: NodePort
+  ports:
+    - name: {{ .Values.postgres.name }}
+      port: {{ .Values.postgres.port }}
+      targetPort: {{ .Values.postgres.port }}
+      protocol: TCP

@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.project.delivery.name }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: {{ .Values.project.delivery.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.project.delivery.name }}
+    spec:
+      containers:
+        - name: {{ .Values.project.delivery.container.name }}
+          image: {{ .Values.project.delivery.container.image }}
+          ports:
+            - containerPort: {{ .Values.project.port }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.project.delivery.svc_name }} # имя сервиса
+spec:
+  ports:
+    - protocol: TCP
+      port: {{ .Values.project.svc_port}} # порт, на котором сервис будет принимать трафик
+      targetPort: {{ .Values.project.port}} # порт, на который сервис будет перенаправлять трафик
+  selector:
+    app: {{ .Values.project.delivery.name }} # значение метки, по которой селектор будет производить выборку
+  type: NodePort # тип сервиса
+---  
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: delivery-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: {{ .Values.project.host }}
+      http:
+        paths:
+          - path: {{ .Values.project.delivery.path }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.project.delivery.svc_name}}
+                port:
+                  number: {{ .Values.project.svc_port }}
+          - path: {{ .Values.project.ping}}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.project.delivery.svc_name}}
+                port:
+                  number: {{ .Values.project.svc_port }}
+          - path: {{ .Values.project.health}}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.project.delivery.svc_name}}
+                port:
+                  number: {{ .Values.project.svc_port }}
+          - path: {{ .Values.project.live}}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.project.delivery.svc_name}}
+                port:
+                  number: {{ .Values.project.svc_port }}
+          - path: {{ .Values.project.ready}}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.project.delivery.svc_name}}
+                port:
+                  number: {{ .Values.project.svc_port }}
+          - path: {{ .Values.project.metrics}}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.project.delivery.svc_name}}
+                port:
+                  number: {{ .Values.project.svc_port }}

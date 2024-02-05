@@ -1,0 +1,52 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: users-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: {{ .Values.project.host }}
+      http:
+        paths:
+          - path: {{ .Values.project.user.path }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.project.user.svc_name}}
+                port:
+                  number: {{ .Values.project.svc_port }}
+          - path: {{ .Values.project.ping}}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.project.user.svc_name}}
+                port:
+                  number: {{ .Values.project.svc_port }}
+          - path: {{ .Values.project.health}}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.project.user.svc_name}}
+                port:
+                  number: {{ .Values.project.svc_port }}
+          - path: {{ .Values.project.live}}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.project.user.svc_name}}
+                port:
+                  number: {{ .Values.project.svc_port }}
+          - path: {{ .Values.project.ready}}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.project.user.svc_name}}
+                port:
+                  number: {{ .Values.project.svc_port }}
+          - path: {{ .Values.project.metrics}}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.project.user.svc_name}}
+                port:
+                  number: {{ .Values.project.svc_port }}

@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: notify-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: {{ .Values.project.host }}
+      http:
+        paths:
+          - path: {{ .Values.project.notify.path }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.project.notify.svc_name}}
+                port:
+                  number: {{ .Values.project.svc_port }}

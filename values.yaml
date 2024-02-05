@@ -1,0 +1,75 @@
+# Default values for postgres.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+postgres:
+  replicaCount: 1
+  name: postgres
+  port: 5432
+  mountPath: /var/lib/postgresql/data
+  host: postgres.default
+  image:
+    repository: bitnami/postgresql
+  volume:
+    storage: 2Gi
+    path: /data/postgres
+  secret:
+    user: cG9zdGdyZXM=
+    pass: cGFzc3dvcmQ=
+env:
+  name: order-configmap
+  PAYMENT_HOST: http://payment-service.default.svc.cluster.local/balance/reserve
+  STOCK_HOST: http://stock-service.default.svc.cluster.local/products/reserve
+  DELIVERY_HOST: http://delivery-service.default.svc.cluster.local/courier/reserve
+  NOTIFY_HOST: http://notify-service.default.svc.cluster.local/message/send
+  BALANCE_HOST: http://payment-service.default.svc.cluster.local/balance/add
+project:
+  port: 8000
+  svc_port: 80
+  host: arch.homework
+  ping: /ping
+  health: /health
+  ready: /ready
+  live: /live
+  metrics: /metrics
+  order:
+    name: order
+    svc_name: order-service
+    path: /order
+    container:
+      name: hw37order
+      image: kisuni/hw37order 
+  delivery:
+    name: delivery
+    svc_name: delivery-service
+    path: /courier
+    container:
+      name: hw32delivery
+      image: kisuni/hw32delivery      
+  stock:
+    name: stock
+    svc_name: stock-service
+    path: /products
+    container:
+      name: hw32stock
+      image: kisuni/hw32stock
+  user:
+    name: users
+    svc_name: users-service
+    path: /user
+    container:
+      name: hw37user
+      image: kisuni/hw37user
+  payment:
+    name: payment
+    svc_name: payment-service
+    path: /balance
+    container:
+      name: hw37payment
+      image: kisuni/hw37payment
+  notify:
+    name: notify
+    svc_name: notify-service
+    path: /message
+    container:
+      name: hw37notify
+      image: kisuni/hw37notify  

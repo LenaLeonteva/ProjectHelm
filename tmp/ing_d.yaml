@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: delivery-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: {{ .Values.project.host }}
+      http:
+        paths:
+          - path: {{ .Values.project.delivery.path }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.project.delivery.svc_name}}
+                port:
+                  number: {{ .Values.project.svc_port }}
