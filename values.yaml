@@ -3,10 +3,10 @@
 # Declare variables to be passed into your templates.
 postgres:
   replicaCount: 1
-  name: postgres
-  port: 5432
+  name: 'postgres'
+  port: '5432'
   mountPath: /var/lib/postgresql/data
-  host: postgres.default
+  host: 'postgres.default'
   image:
     repository: bitnami/postgresql
   volume:
@@ -16,12 +16,12 @@ postgres:
     user: cG9zdGdyZXM=
     pass: cGFzc3dvcmQ=
 env:
-  name: order-configmap
-  PAYMENT_HOST: http://payment-service.default.svc.cluster.local/balance/reserve
-  STOCK_HOST: http://stock-service.default.svc.cluster.local/products/reserve
-  DELIVERY_HOST: http://delivery-service.default.svc.cluster.local/courier/reserve
-  NOTIFY_HOST: http://notify-service.default.svc.cluster.local/message/send
-  BALANCE_HOST: http://payment-service.default.svc.cluster.local/balance/add
+  name: 'order-configmap'
+  PAYMENT_HOST: 'http://payment-service.default.svc.cluster.local/balance/reserve'
+  STOCK_HOST: 'http://stock-service.default.svc.cluster.local/products/reserve'
+  DELIVERY_HOST: 'http://delivery-service.default.svc.cluster.local/courier/reserve'
+  NOTIFY_HOST: 'http://notify-service.default.svc.cluster.local/message/send'
+  BALANCE_HOST: 'http://payment-service.default.svc.cluster.local/balance/add'
 project:
   port: 8000
   svc_port: 80
