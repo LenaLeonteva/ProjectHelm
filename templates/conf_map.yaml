@@ -9,5 +9,5 @@ data:
   NOTIFY_HOST: {{ .Values.env.NOTIFY_HOST }}
   BALANCE_HOST: {{ .Values.env.BALANCE_HOST }}
   DB_HOST: {{ .Values.postgres.host }}
-  DB_PORT: {{ .Values.postgres.port }}
+  DB_PORT: {{ .Values.postgres.port | quote }}
   DB_DATABASE: {{ .Values.postgres.name }}
