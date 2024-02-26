@@ -60,8 +60,9 @@ metadata:
   name: order-ingress
   annotations:
     nginx.ingress.kubernetes.io/auth-url: "http://arch.homework/auth"
+    #nginx.ingress.kubernetes.io/auth-url: "http://users-service.default.svc.cluster.local/auth"
     nginx.ingress.kubernetes.io/auth-signin: "http://arch.homework/signin"
-    nginx.ingress.kubernetes.io/auth-response-headers: "X-UserId,X-User,X-Admin"  
+    nginx.ingress.kubernetes.io/auth-response-headers: "X-UserId,X-User,X-Admin,X-Email"  
 spec:
   ingressClassName: nginx
   rules:
