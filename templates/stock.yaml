@@ -50,38 +50,3 @@ spec:
                 name: {{ .Values.project.stock.svc_name}}
                 port:
                   number: {{ .Values.project.svc_port }}
-          - path: {{ .Values.project.ping}}
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Values.project.stock.svc_name}}
-                port:
-                  number: {{ .Values.project.svc_port }}
-          - path: {{ .Values.project.health}}
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Values.project.stock.svc_name}}
-                port:
-                  number: {{ .Values.project.svc_port }}
-          - path: {{ .Values.project.live}}
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Values.project.stock.svc_name}}
-                port:
-                  number: {{ .Values.project.svc_port }}
-          - path: {{ .Values.project.ready}}
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Values.project.stock.svc_name}}
-                port:
-                  number: {{ .Values.project.svc_port }}
-          - path: {{ .Values.project.metrics}}
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Values.project.stock.svc_name}}
-                port:
-                  number: {{ .Values.project.svc_port }}
