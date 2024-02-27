@@ -27,6 +27,12 @@ spec:
           image: {{ .Values.project.user.container.image }}
           ports:
             - containerPort: {{ .Values.project.port }}
+          livenessProbe:
+            initialDelaySeconds: {{ .Values.project.delay }}
+            periodSeconds: {{ .Values.project.period }}
+            httpGet:
+              path: {{ .Values.project.health }}
+              port: {{ .Values.project.port }}
           env:
             - name: BALANCE_HOST
               valueFrom:

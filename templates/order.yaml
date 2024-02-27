@@ -19,6 +19,12 @@ spec:
           image: {{ .Values.project.order.container.image }}
           ports:
             - containerPort: {{ .Values.project.port }}
+          livenessProbe:
+            initialDelaySeconds: {{ .Values.project.delay }}
+            periodSeconds: {{ .Values.project.period }}
+            httpGet:
+              path: {{ .Values.project.health }}
+              port: {{ .Values.project.port }}
           env:
             - name: PAYMENT_HOST
               valueFrom:

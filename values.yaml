@@ -28,6 +28,8 @@ project:
   host: arch.homework
   ping: /ping
   health: /health
+  delay: 60
+  period: 60
   ready: /ready
   live: /live
   metrics: /metrics
